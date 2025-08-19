@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider        = "prisma-client-js"
   output          = "../src/generated/prisma"
@@ -13,4 +7,29 @@ generator client {
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  createdAt     DateTime @default(now())
+  hostedGames   Game[]   @relation("HostRelation")
+  opponentGames Game[]   @relation("OpponentRelation")
+  spectating    Game[]   @relation("SpectatorRelation")
+  wonGames      Game[]   @relation("WinnerRelation")
+}
+
+model Game {
+  id         String   @id @default(cuid())
+  inviteCode String   @unique
+  boardState String
+  host       User     @relation("HostRelation", fields: [hostId], references: [id])
+  opponent   User?    @relation("OpponentRelation", fields: [opponentId], references: [id])
+  hostId     String
+  opponentId String?
+  completed  Boolean  @default(false)
+  winner     User?    @relation("WinnerRelation", fields: [winnerId], references: [id])
+  winnerId   String?
+  createdAt  DateTime @default(now())
+  spectators User[]   @relation("SpectatorRelation")
 }
