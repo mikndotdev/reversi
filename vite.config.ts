@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@/': '/src',
-      ".prisma/client/edge":"./node_modules/.prisma/client/edge.js"
+      ".prisma/client/":"./node_modules/.prisma/client/index.js"
     },
   }
 });
