@@ -7,7 +7,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), cloudflare()],
   resolve: {
     alias: {
-      '@': '/src',
+      '@/': '/src',
+      ".prisma/client/edge":"./node_modules/.prisma/client/edge.js"
     },
   }
 });
