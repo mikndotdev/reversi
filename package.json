@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "bun run build && vite preview",
     "deploy": "bun run build && wrangler deploy",
+    "upload": "bun run build && wrangler versions upload",
     "cf-typegen": "wrangler types",
     "format": "ultracite format"
   },
