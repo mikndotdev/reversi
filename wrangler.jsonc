@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "uibeam",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2025-08-17",
+  "assets": {
+    "not_found_handling": "single-page-application"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "reversi-db",
+      "database_id": "f0a57dde-7b04-47b5-89bf-2ad41ec91f71"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "reversi-server",
+        "class_name": "reversi_server"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["reversi_server"]
+    }
+  ]
+}
