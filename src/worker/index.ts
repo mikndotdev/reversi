@@ -4,7 +4,7 @@ import { Server } from "partyserver";
 import { D1Database } from "@cloudflare/workers-types";
 import { prisma } from "./lib/prisma";
 
-type Bindings = {
+export type Bindings = {
     DB: D1Database
 }
 
@@ -15,6 +15,7 @@ export class reversi_server extends Server {
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
+
 app.use("*", partyserverMiddleware());
 
 app.get("/api/count", async (c) => {
@@ -24,3 +25,4 @@ app.get("/api/count", async (c) => {
 })
 
 export default app;
+export type AppType = typeof app

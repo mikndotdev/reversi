@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), cloudflare()],
   resolve: {
     alias: {
-      '@/': '/src',
+      '@': '/src',
       ".prisma/client/":"./node_modules/.prisma/client/index.js",
       ".prisma/client/default": "./node_modules/.prisma/client/default.js"
     },
