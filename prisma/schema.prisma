@@ -12,6 +12,7 @@ model User {
   id            String   @id @default(cuid())
   name          String
   createdAt     DateTime @default(now())
+  pieceType     String
   hostedGames   Game[]   @relation("HostRelation")
   opponentGames Game[]   @relation("OpponentRelation")
   spectating    Game[]   @relation("SpectatorRelation")

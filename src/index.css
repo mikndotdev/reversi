@@ -1,4 +1,8 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-    themes: synthwave --default;
+  themes: synthwave --default;
+}
+
+body {
+  font-family: "Inter Variable", sans-serif;
 }
