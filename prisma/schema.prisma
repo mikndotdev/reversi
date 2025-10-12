@@ -31,6 +31,7 @@ model Game {
 model Player {
   id             String @id @default(cuid())
   name           String
+  color          Color
   gamesAsPlayer1 Game[] @relation("Player1")
   gamesAsPlayer2 Game[] @relation("Player2")
   Token          Token?

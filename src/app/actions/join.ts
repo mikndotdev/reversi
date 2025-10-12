@@ -18,7 +18,7 @@ export const createGame = async (name: string, color: Color, token: string) => {
   }
 
   const player = await db.player.create({
-    data: { name },
+    data: { name, color },
   });
 
   const inviteId = randomBytes(3).toString("hex").toUpperCase();
@@ -95,8 +95,11 @@ export const registerP2 = async (gameId: string, name: string) => {
     throw new Error("Game already has two players");
   }
 
+  const P1Color = game.player1.color;
+  const P2Color = P1Color === Color.WHITE ? Color.BLACK : Color.WHITE;
+
   const player = await db.player.create({
-    data: { name },
+    data: { name, color: P2Color },
   });
 
   const updatedGame = await db.game.update({
