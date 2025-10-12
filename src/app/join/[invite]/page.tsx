@@ -1,0 +1,33 @@
+import { notFound, redirect } from "next/navigation";
+import { getSession } from "@/app/actions/auth";
+import { cookies } from "next/headers";
+import { db } from "@/lib/db";
+import { Lobby } from "@/components/Lobby";
+import { JoinGame } from "@/components/JoinGame";
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ invite: string }>;
+}) {
+  const { invite } = await params;
+  const gameData = await db.game.findUnique({
+    where: { inviteId: invite },
+    include: { player1: true, player2: true },
+  });
+
+  if (!gameData) {
+    return notFound();
+  }
+
+  if (gameData.status !== "PENDING") {
+    return redirect(`/play/${gameData.id}`);
+  }
+
+  return (
+    <div className={"flex flex-col items-center justify-center min-h-screen"}>
+      <h1 className={"text-4xl font-bold mb-5"}>Join game</h1>
+      <JoinGame game={gameData} />
+    </div>
+  );
+}
