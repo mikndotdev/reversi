@@ -23,10 +23,11 @@ export function JoinInput() {
     value: string,
     setter: (val: string) => void,
   ) => {
-    setter(value);
-    if (value.length === 1 && index < 5) {
+    const upperValue = value.toUpperCase();
+    setter(upperValue);
+    if (upperValue.length === 1 && index < 5) {
       inputsRef.current[index + 1]?.focus();
-    } else if (value.length === 0 && index > 0) {
+    } else if (upperValue.length === 0 && index > 0) {
       inputsRef.current[index - 1]?.focus();
     }
   };

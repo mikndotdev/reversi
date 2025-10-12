@@ -15,6 +15,12 @@ const schema = {
   test: z.object({
     message: z.string(),
   }),
+  start: z.object({
+    name: z.string(),
+  }),
+  p2Ready: z.object({
+    name: z.string(),
+  }),
 };
 
 export const realtime = new Realtime({ schema, redis });

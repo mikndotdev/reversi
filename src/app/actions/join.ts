@@ -69,3 +69,58 @@ export const rejectJoin = async (gameId: string, name: string) => {
   const channel = realtime.channel(gameId);
   await channel.reject.name.emit(name);
 };
+
+export const startGame = async (gameId: string) => {
+  await db.game.update({
+    where: { id: gameId, status: "PENDING" },
+    data: { status: "IN_PROGRESS" },
+  });
+  const channel = realtime.channel(gameId);
+  await channel.start.name.emit(gameId);
+};
+
+export const registerP2 = async (gameId: string, name: string) => {
+  const cookieStore = await cookies();
+  const channel = realtime.channel(gameId);
+  const game = await db.game.findUnique({
+    where: { id: gameId },
+    include: { player1: true, player2: true },
+  });
+
+  if (!game) {
+    throw new Error("Game not found");
+  }
+
+  if (game.player2) {
+    throw new Error("Game already has two players");
+  }
+
+  const player = await db.player.create({
+    data: { name },
+  });
+
+  const updatedGame = await db.game.update({
+    where: { id: gameId },
+    data: { player2Id: player.id },
+    include: { player1: true, player2: true },
+  });
+
+  const accessToken = randomBytes(16).toString("hex");
+  await db.token.create({
+    data: {
+      playerId: player.id,
+      gameId: updatedGame.id,
+      id: accessToken,
+    },
+  });
+
+  cookieStore.set("GAME_SESSION", accessToken, {
+    httpOnly: true,
+    path: "/",
+    sameSite: "lax",
+    secure: true,
+  });
+
+  await channel.p2Ready.name.emit(name);
+  return redirect(`/play/${gameId}`);
+};

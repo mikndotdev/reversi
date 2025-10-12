@@ -25,7 +25,7 @@ model Game {
   board     String   @default("[]")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Token     Token?
+  Tokens    Token[]
 }
 
 model Player {
@@ -41,7 +41,7 @@ model Token {
   player   Player @relation(fields: [playerId], references: [id])
   playerId String @unique
   game     Game   @relation(fields: [gameId], references: [id])
-  gameId   String @unique
+  gameId   String
 }
 
 enum Color {

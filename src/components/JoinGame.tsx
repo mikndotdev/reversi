@@ -4,7 +4,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useRealtime } from "@upstash/realtime/client";
 import { RealtimeEvents } from "@/lib/realtime";
-import { requestJoin } from "@/app/actions/join";
+import { requestJoin, registerP2 } from "@/app/actions/join";
+import { Howl } from "howler";
 
 interface Props {
   game: Game;
@@ -13,6 +14,7 @@ interface Props {
 export function JoinGame({ game }: Props) {
   const [name, setName] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const start = new Howl({ src: ["/sounds/start.mp3"] });
 
   useRealtime<RealtimeEvents>({
     channel: game.id,
@@ -26,6 +28,12 @@ export function JoinGame({ game }: Props) {
         name: (data) => {
           setLoading(false);
           toast.error(`Host rejected your request.`);
+        },
+      },
+      start: {
+        name: (data) => {
+          start.play();
+          registerP2(game.id, name);
         },
       },
     },
@@ -58,6 +66,7 @@ export function JoinGame({ game }: Props) {
           placeholder="Userame"
           className="input input-bordered w-full"
           value={name}
+          disabled={loading}
           onChange={(e) => setName(e.target.value)}
         />
         <div className="card-actions w-full mt-5">

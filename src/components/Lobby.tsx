@@ -3,9 +3,10 @@ import { Game } from "@/generated/prisma";
 import { useState } from "react";
 import { useRealtime } from "@upstash/realtime/client";
 import { RealtimeEvents } from "@/lib/realtime";
-import { rejectJoin } from "@/app/actions/join";
+import { rejectJoin, startGame } from "@/app/actions/join";
 import { toast } from "sonner";
-import useSound from "use-sound";
+import { Howl } from "howler";
+import { useRouter } from "next/navigation";
 
 interface Props {
   game: Game;
@@ -16,6 +17,9 @@ interface Props {
 export function Lobby({ game, name, opponent }: Props) {
   const [player1] = useState<string>(name);
   const [player2, setPlayer2] = useState<string | null>(opponent || null);
+  const [starting, setStarting] = useState(false);
+  const ding = new Howl({ src: ["/sounds/ding.mp3"] });
+  const router = useRouter();
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -30,12 +34,23 @@ export function Lobby({ game, name, opponent }: Props) {
     }
   };
 
+  const start = async () => {
+    setStarting(true);
+    await startGame(game.id);
+  };
+
   useRealtime<RealtimeEvents>({
     channel: game.id,
     events: {
       join: {
         name: (data) => {
           setPlayer2(data);
+          ding.play();
+        },
+      },
+      p2Ready: {
+        name: (data) => {
+          router.push(`/play/${game.id}`);
         },
       },
     },
@@ -96,8 +111,19 @@ export function Lobby({ game, name, opponent }: Props) {
               Copy Invite Link
             </button>
           </div>
-          <button className="btn btn-primary w-full" disabled={!player2}>
-            Start Game
+          <button
+            className="btn btn-primary w-full"
+            disabled={!player2 || starting}
+            onClick={() => start()}
+          >
+            {starting ? (
+              <>
+                <span className="loading loading-spinner" />
+                Starting game...
+              </>
+            ) : (
+              <>Start Game</>
+            )}
           </button>
           {player2 && (
             <button
