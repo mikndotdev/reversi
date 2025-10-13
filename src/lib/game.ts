@@ -126,3 +126,22 @@ export function ProcessMove(
 
   return newBoard;
 }
+
+// Check if a player has any valid moves
+export function HasValidMoves(
+  color: Color,
+  board: ("B" | "W" | null)[][],
+): boolean {
+  const columns = ["A", "B", "C", "D", "E", "F", "G", "H"];
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const coord = `${columns[col]}${row + 1}`;
+      if (ValidateMove(color, board, coord)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}

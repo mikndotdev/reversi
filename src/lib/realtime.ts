@@ -24,9 +24,15 @@ const schema = {
   }),
   place: z.object({
     move: z.object({
-      color: z.nativeEnum(Color),
+      color: z.enum(Color),
       coord: z.string(),
       flippedPieces: z.array(z.array(z.tuple([z.number(), z.number()]))),
+    }),
+  }),
+  skip: z.object({
+    turn: z.object({
+      skippedColor: z.enum(Color),
+      nextColor: z.enum(Color),
     }),
   }),
 };

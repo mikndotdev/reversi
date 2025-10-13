@@ -64,6 +64,13 @@ export function PlayArea({ initialState, player, opponent }: Props) {
           }
         },
       },
+      skip: {
+        turn: (data) => {
+          const skippedPlayerName = data.skippedColor === player.color ? player.name : opponent.name;
+          toast.warning(`${skippedPlayerName} has no valid moves. Turn skipped!`);
+          setTurn(data.nextColor);
+        },
+      },
     },
   });
 

@@ -48,6 +48,16 @@ export function SpectateArea({ initialState, player1, player2 }: Props) {
           }
         },
       },
+      skip: {
+        turn: (data) => {
+          const skippedPlayerName =
+            data.skippedColor === player1.color
+              ? player1.name
+              : player2?.name ?? "Player 2";
+          console.log(`${skippedPlayerName} has no valid moves. Turn skipped!`);
+          setTurn(data.nextColor);
+        },
+      },
     },
   });
 

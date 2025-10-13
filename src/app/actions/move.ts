@@ -2,7 +2,7 @@
 import { cookies } from "next/headers";
 import { Color } from "@/generated/prisma";
 import { db } from "@/lib/db";
-import { GetFlippedPieces, ProcessMove, ValidateMove } from "@/lib/game";
+import { GetFlippedPieces, ProcessMove, ValidateMove, HasValidMoves } from "@/lib/game";
 import { realtime } from "@/lib/realtime";
 import { getSession } from "./auth";
 
@@ -52,7 +52,23 @@ export const movePiece = async (gameId: string, coord: string) => {
   const flippedPieces = GetFlippedPieces(session.player.color, board, coord);
 
   // Change turn
-  const nextTurn = game.turn === Color.BLACK ? Color.WHITE : Color.BLACK;
+  let nextTurn = game.turn === Color.BLACK ? Color.WHITE : Color.BLACK;
+
+  // Check if the next player has valid moves
+  let turnSkipped = false;
+  if (!HasValidMoves(nextTurn, newBoard)) {
+    // Next player has no valid moves, skip their turn
+    turnSkipped = true;
+    const skippedColor = nextTurn;
+    nextTurn = nextTurn === Color.BLACK ? Color.WHITE : Color.BLACK;
+
+    // Broadcast the skip event
+    const channel = realtime.channel(gameId);
+    await channel.skip.turn.emit({
+      skippedColor,
+      nextColor: nextTurn,
+    });
+  }
 
   // Update the database
   await db.game.update({
@@ -71,5 +87,5 @@ export const movePiece = async (gameId: string, coord: string) => {
     flippedPieces,
   });
 
-  return { success: true };
+  return { success: true, turnSkipped };
 };
