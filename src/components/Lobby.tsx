@@ -7,6 +7,7 @@ import { rejectJoin, startGame } from "@/app/actions/join";
 import { toast } from "sonner";
 import { Howl } from "howler";
 import { useRouter } from "next/navigation";
+import { QRCodeCanvas } from "qrcode.react";
 
 interface Props {
   game: Game;
@@ -94,6 +95,36 @@ export function Lobby({ game, name, opponent }: Props) {
           </div>
         </div>
         <div className="card-actions w-full mt-5">
+          <div className="collapse bg-base-100 border border-base-300">
+            <input type="checkbox" />
+            <div className="collapse-title font-semibold">
+              Show join instructions
+            </div>
+            <div className="collapse-content">
+              <div className={"flex flex-row justify-between w-full"}>
+                <div className={"flex flex-col"}>
+                  <p className={"text-md"}>Go to</p>
+                  <p className={"text-3xl font-bold"}>
+                    {process.env.NEXT_PUBLIC_BASE_URL}/join
+                  </p>
+                </div>
+                <div className={"flex flex-col text-right"}>
+                  <p className={"text-md"}>Enter code:</p>
+                  <span className={"text-6xl font-bold ml-3"}>
+                    {game.inviteId}
+                  </span>
+                </div>
+              </div>
+              <div className={"flex justify-center mt-5"}>
+                <QRCodeCanvas
+                  value={`${process.env.NEXT_PUBLIC_BASE_URL}/join/${game.inviteId}`}
+                  size={150}
+                  marginSize={2}
+                  level={"H"}
+                />
+              </div>
+            </div>
+          </div>
           <div className={"w-full flex flex-row space-x-3"}>
             <input
               value={`${process.env.NEXT_PUBLIC_BASE_URL}/join/${game.inviteId}`}
