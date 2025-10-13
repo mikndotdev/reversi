@@ -88,6 +88,7 @@ export function PlayArea({ initialState, player, opponent }: Props) {
     if (isProcessing) return;
     if (turn !== player.color) {
       wrongSound.play();
+        return;
     }
 
     if (!ValidateMove(player.color, board, coord)) {
@@ -132,8 +133,7 @@ export function PlayArea({ initialState, player, opponent }: Props) {
       setIsProcessing(false);
     } catch (error) {
       wrongSound.play();
-      toast.error(
-        error instanceof Error ? error.message : "Failed to make move",
+      toast.error("Failed to make move"
       );
       setIsProcessing(false);
     }
