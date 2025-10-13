@@ -16,7 +16,7 @@ const schema = {
     message: z.string(),
   }),
   start: z.object({
-    name: z.string(),
+    player2Name: z.string(),
   }),
   p2Ready: z.object({
     name: z.string(),

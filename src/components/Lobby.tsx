@@ -36,7 +36,7 @@ export function Lobby({ game, name, opponent }: Props) {
 
   const start = async () => {
     setStarting(true);
-    await startGame(game.id);
+    await startGame(game.id, player2!);
   };
 
   useRealtime<RealtimeEvents>({

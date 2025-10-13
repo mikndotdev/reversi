@@ -11,6 +11,8 @@ export default async function Page({
   params: Promise<{ invite: string }>;
 }) {
   const { invite } = await params;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("GAME_SESSION");
   const gameData = await db.game.findUnique({
     where: { inviteId: invite },
     include: { player1: true, player2: true },
@@ -22,6 +24,13 @@ export default async function Page({
 
   if (gameData.status !== "PENDING") {
     return redirect(`/play/${gameData.id}`);
+  }
+
+  if (token) {
+    const session = await getSession(token?.value!);
+    if (session && session.gameId === gameData.id) {
+      return redirect(`/lobby/${gameData.id}`);
+    }
   }
 
   return (

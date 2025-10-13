@@ -1,11 +1,12 @@
 "use client";
 import { Game } from "@/generated/prisma";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 import { useRealtime } from "@upstash/realtime/client";
 import { RealtimeEvents } from "@/lib/realtime";
 import { requestJoin, registerP2 } from "@/app/actions/join";
 import { Howl } from "howler";
+import { useRouter } from "next/navigation";
 
 interface Props {
   game: Game;
@@ -14,16 +15,17 @@ interface Props {
 export function JoinGame({ game }: Props) {
   const [name, setName] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const nameRef = useRef(name);
   const start = new Howl({ src: ["/sounds/start.mp3"] });
+  const router = useRouter();
+
+  useEffect(() => {
+    nameRef.current = name;
+  }, [name]);
 
   useRealtime<RealtimeEvents>({
     channel: game.id,
     events: {
-      accept: {
-        name: (data) => {
-          toast.success(`Host accepted you, starting game...`);
-        },
-      },
       reject: {
         name: (data) => {
           setLoading(false);
@@ -31,9 +33,13 @@ export function JoinGame({ game }: Props) {
         },
       },
       start: {
-        name: (data) => {
+        player2Name: (data) => {
+          if (data !== nameRef.current) {
+            toast.error("Game started with a different player.");
+            return router.push("/");
+          }
           start.play();
-          registerP2(game.id, name);
+          registerP2(game.id, data);
         },
       },
     },
@@ -66,7 +72,6 @@ export function JoinGame({ game }: Props) {
           placeholder="Userame"
           className="input input-bordered w-full"
           value={name}
-          disabled={loading}
           onChange={(e) => setName(e.target.value)}
         />
         <div className="card-actions w-full mt-5">

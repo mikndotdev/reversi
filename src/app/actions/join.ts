@@ -70,13 +70,13 @@ export const rejectJoin = async (gameId: string, name: string) => {
   await channel.reject.name.emit(name);
 };
 
-export const startGame = async (gameId: string) => {
+export const startGame = async (gameId: string, player2Name: string) => {
   await db.game.update({
     where: { id: gameId, status: "PENDING" },
     data: { status: "IN_PROGRESS" },
   });
   const channel = realtime.channel(gameId);
-  await channel.start.name.emit(gameId);
+  await channel.start.player2Name.emit(player2Name);
 };
 
 export const registerP2 = async (gameId: string, name: string) => {
@@ -102,9 +102,20 @@ export const registerP2 = async (gameId: string, name: string) => {
     data: { name, color: P2Color },
   });
 
+  const initialBoard: (null | "B" | "W")[][] = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, "W", "B", null, null],
+    [null, null, null, "B", "W", null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+  ];
+
   const updatedGame = await db.game.update({
     where: { id: gameId },
-    data: { player2Id: player.id },
+    data: { player2Id: player.id, board: JSON.stringify(initialBoard) },
     include: { player1: true, player2: true },
   });
 
