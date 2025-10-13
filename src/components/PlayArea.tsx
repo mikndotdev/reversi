@@ -88,12 +88,10 @@ export function PlayArea({ initialState, player, opponent }: Props) {
     if (isProcessing) return;
     if (turn !== player.color) {
       wrongSound.play();
-      return toast.error("Not your turn");
     }
 
     if (!ValidateMove(player.color, board, coord)) {
       wrongSound.play();
-      toast.error("Invalid move");
       return;
     }
 

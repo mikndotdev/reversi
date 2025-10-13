@@ -5,6 +5,37 @@ import { JoinGame } from "@/components/JoinGame";
 import { Lobby } from "@/components/Lobby";
 import { db } from "@/lib/db";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ invite: string }>;
+}) {
+  const { invite } = await params;
+  const gameData = await db.game.findUnique({
+    where: { inviteId: invite },
+    include: { player1: true, player2: true },
+  });
+
+  if (!gameData) {
+    return {
+      title: "Game not found",
+      description: "The game you are looking for does not exist.",
+    };
+  }
+
+  if (gameData.status !== "PENDING") {
+    return {
+      title: "Game already started",
+      description: "The game you are trying to join has already started.",
+    };
+  }
+
+  return {
+    title: `Join ${gameData.player1.name}'s game`,
+    description: `${gameData.player1.name} has invited you to a game of Reversi. Will you accept the challenge?`,
+  };
+}
+
 export default async function Page({
   params,
 }: {

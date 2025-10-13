@@ -34,7 +34,11 @@ export const movePiece = async (coord: string) => {
     throw new Error("Not your turn");
   }
 
-  const valid = ValidateMove(session.player.color, game.board as unknown as ("B" | "W" | null)[][], coord);
+  const valid = ValidateMove(
+    session.player.color,
+    game.board as unknown as ("B" | "W" | null)[][],
+    coord,
+  );
 
   if (!valid) {
     throw new Error("Invalid move");
