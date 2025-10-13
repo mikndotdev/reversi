@@ -22,6 +22,10 @@ export default async function Page({
     return notFound();
   }
 
+  if (!token) {
+    return redirect(`/spectate/${gameData.id}`);
+  }
+
   const session = await getSession(token?.value!);
 
   if (!session || session.gameId !== gameData.id) {
