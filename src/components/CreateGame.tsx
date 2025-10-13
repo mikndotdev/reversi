@@ -1,9 +1,9 @@
 "use client";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Turnstile } from "next-turnstile";
-import { Color } from "@/generated/prisma";
+import { useState } from "react";
 import { createGame } from "@/app/actions/join";
+import type { Color } from "@/generated/prisma";
 
 export function CreateGame() {
   const [name, setName] = useState("");

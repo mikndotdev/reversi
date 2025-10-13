@@ -23,6 +23,8 @@ model Game {
   player2Id String?
   status    Status   @default(PENDING)
   board     String   @default("[]")
+  turn      Color    @default(BLACK)
+  winner    Color?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Tokens    Token[]

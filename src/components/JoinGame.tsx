@@ -1,12 +1,12 @@
 "use client";
-import { Game } from "@/generated/prisma";
-import { useEffect, useState, useRef } from "react";
-import { toast } from "sonner";
 import { useRealtime } from "@upstash/realtime/client";
-import { RealtimeEvents } from "@/lib/realtime";
-import { requestJoin, registerP2 } from "@/app/actions/join";
 import { Howl } from "howler";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { registerP2, requestJoin } from "@/app/actions/join";
+import type { Game } from "@/generated/prisma";
+import type { RealtimeEvents } from "@/lib/realtime";
 
 interface Props {
   game: Game;

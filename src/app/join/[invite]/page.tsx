@@ -1,9 +1,9 @@
+import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { getSession } from "@/app/actions/auth";
-import { cookies } from "next/headers";
-import { db } from "@/lib/db";
-import { Lobby } from "@/components/Lobby";
 import { JoinGame } from "@/components/JoinGame";
+import { Lobby } from "@/components/Lobby";
+import { db } from "@/lib/db";
 
 export default async function Page({
   params,

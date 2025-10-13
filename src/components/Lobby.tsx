@@ -1,13 +1,13 @@
 "use client";
-import { Game } from "@/generated/prisma";
-import { useState } from "react";
 import { useRealtime } from "@upstash/realtime/client";
-import { RealtimeEvents } from "@/lib/realtime";
-import { rejectJoin, startGame } from "@/app/actions/join";
-import { toast } from "sonner";
 import { Howl } from "howler";
 import { useRouter } from "next/navigation";
 import { QRCodeCanvas } from "qrcode.react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { rejectJoin, startGame } from "@/app/actions/join";
+import type { Game } from "@/generated/prisma";
+import type { RealtimeEvents } from "@/lib/realtime";
 
 interface Props {
   game: Game;

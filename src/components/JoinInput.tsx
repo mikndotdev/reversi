@@ -1,8 +1,8 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { verifyCode } from "@/app/actions/join";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { verifyCode } from "@/app/actions/join";
 
 export function JoinInput() {
   const [c1, setC1] = useState("");

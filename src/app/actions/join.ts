@@ -1,10 +1,10 @@
 "use server";
-import { validateTurnstileToken } from "next-turnstile";
-import { redirect } from "next/navigation";
+import { randomBytes } from "crypto";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { validateTurnstileToken } from "next-turnstile";
 import { Color } from "@/generated/prisma";
 import { db } from "@/lib/db";
-import { randomBytes } from "crypto";
 import { realtime } from "@/lib/realtime";
 
 export const createGame = async (name: string, color: Color, token: string) => {
@@ -106,7 +106,7 @@ export const registerP2 = async (gameId: string, name: string) => {
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
-    [null, null, null, null, "W", "B", null, null],
+    [null, null, null, "W", "B", null, null, null],
     [null, null, null, "B", "W", null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
